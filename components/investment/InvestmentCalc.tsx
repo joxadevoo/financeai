@@ -193,7 +193,7 @@ export function InvestmentCalc() {
           </CardHeader>
           <CardContent>
             <div className="rounded-md overflow-x-auto">
-              <table className="w-full text-sm text-left">
+              <table className="w-full min-w-[600px] text-sm text-left">
                 <thead className="text-xs text-muted-foreground uppercase bg-neutral-50/50 dark:bg-neutral-900/50 border-b">
                   <tr>
                     <th className="px-4 py-3 font-medium whitespace-nowrap">{t.investments.asset}</th>

@@ -37,7 +37,7 @@ export function IncomeList() {
       </div>
       <CardContent className="p-0">
         <div className="rounded-md overflow-x-auto">
-          <table className="w-full text-sm text-left">
+          <table className="w-full min-w-[700px] text-sm text-left">
             <thead className="text-xs text-muted-foreground uppercase bg-neutral-50/50 dark:bg-neutral-900/50 border-b">
               <tr>
                 <th className="px-6 py-4 font-medium whitespace-nowrap">{t.income.source}</th>

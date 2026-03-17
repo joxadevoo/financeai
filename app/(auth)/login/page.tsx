@@ -32,7 +32,7 @@ export default function LoginPage() {
       router.push('/')
       router.refresh()
     } catch (err: unknown) {
-      setError((err as Error).message || 'An error occurred during login')
+      setError((err as Error).message || 'Tizimga kirishda xato yuz berdi')
     } finally {
       setLoading(false)
     }
@@ -55,15 +55,15 @@ export default function LoginPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-2 text-center lg:text-left">
-        <h2 className="text-3xl font-bold tracking-tight">Welcome back</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Xush kelibsiz</h2>
         <p className="text-sm text-muted-foreground">
-          Enter your credentials to access your account
+          Hisobingizga kirish uchun ma&apos;lumotlarni kiriting
         </p>
       </div>
 
       <form onSubmit={handleLogin} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">Elektron pochta</Label>
           <Input 
             id="email" 
             type="email" 
@@ -75,9 +75,9 @@ export default function LoginPage() {
         </div>
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">Parol</Label>
             <Link href="#" className="text-sm text-blue-600 hover:text-blue-500 font-medium">
-              Forgot password?
+              Parolni unutdingizmi?
             </Link>
           </div>
           <Input 
@@ -96,7 +96,7 @@ export default function LoginPage() {
         )}
 
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? 'Signing in...' : 'Sign In'}
+          {loading ? 'Kirilmoqda...' : 'Tizimga kirish'}
         </Button>
       </form>
 
@@ -106,7 +106,7 @@ export default function LoginPage() {
         </div>
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
+            Yoki quyidagilar orqali davom eting
           </span>
         </div>
       </div>
@@ -119,9 +119,9 @@ export default function LoginPage() {
       </Button>
 
       <div className="text-center text-sm">
-        Don&apos;t have an account?{' '}
+        Hisobingiz yo&apos;qmi?{' '}
         <Link href="/register" className="font-medium text-blue-600 hover:text-blue-500">
-          Sign up
+          Ro&apos;yxatdan o&apos;tish
         </Link>
       </div>
     </div>

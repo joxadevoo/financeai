@@ -14,10 +14,10 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           </Link>
           <div className="space-y-6 max-w-md">
             <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
-              Master Your Money with AI
+              Pul mablag&apos;laringizni sun&apos;iy intellekt bilan boshqaring
             </h1>
             <p className="text-lg text-neutral-400">
-              Track your spending, plan your budget, and get personalized financial advice powered by artificial intelligence.
+              Xarajatlaringizni kuzatib boring, byudjetingizni rejalashtiring va sun&apos;iy intellektga asoslangan shaxsiy moliyaviy maslahatlarni oling.
             </p>
           </div>
         </div>
@@ -25,9 +25,9 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         <div className="space-y-4">
           <blockquote className="space-y-2">
             <p className="text-lg italic text-neutral-300">
-              &quot;FinanceAI has completely transformed how I manage my monthly budget. The AI insights caught subscriptions I forgot I had!&quot;
+              &quot;Boylik pulning ko&apos;pligida emas, uning qanday boshqarilishida.&quot;
             </p>
-            <footer className="text-sm text-neutral-500">— Sarah J., Product Manager</footer>
+            <footer className="text-sm text-neutral-500">— Epiktet, Faylasuf</footer>
           </blockquote>
         </div>
       </div>
