@@ -58,7 +58,7 @@ export function ExpenseList() {
         />
       </div>
       <CardContent className="p-0">
-        <div className="rounded-md overflow-x-auto">
+        <div className="rounded-md overflow-x-auto w-full max-w-[calc(100vw-2rem)] sm:max-w-full">
           <table className="w-full min-w-[700px] text-sm text-left">
             <thead className="text-xs text-muted-foreground uppercase bg-neutral-50/50 dark:bg-neutral-900/50 border-b">
               <tr>
