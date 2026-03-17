@@ -11,6 +11,22 @@ export const metadata: Metadata = {
   title: "FinanceAI - Master Your Money",
   description: "Personal AI Finance Assistant",
   manifest: "/manifest.json",
+  icons: {
+    icon: [
+      { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/icons/apple-touch-icon.png' }
+    ],
+    shortcut: ['/icons/icon-192x192.png'],
+  },
+  themeColor: '#ffffff',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'FinanceAI',
+  },
 };
 
 export default function RootLayout({
