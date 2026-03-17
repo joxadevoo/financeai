@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FinanceAI
 
-## Getting Started
+A modern, responsive, and beautifully designed personal finance management application built with **Next.js 14**, **React**, **Tailwind CSS**, and **Supabase**.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Dashboard:** At-a-glance overview of your finances with Recharts-powered graphs and AI-generated insights.
+- **Income & Expense Tracking:** Easily record, categorize, and track your daily transactions.
+- **Budgeting Planner:** Set monthly budgets across various categories and monitor your spending limits.
+- **Savings Simulator:** Project your future wealth and savings using advanced visual calculators.
+- **Investment Portfolio:** Track asset allocations, returns on investments, and visualize asset growth.
+- **Multi-Language Support:** Seamlessly switch between English, Russian, and Uzbek.
+- **Dark Mode:** Elegant glassmorphism themes integrated with light/dark modes.
+- **Secure Data Storage:** Fully integrated with Supabase for persistent auth and robust Row Level Security (RLS).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Technology Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework:** Next.js (App Router)
+- **State Management:** Zustand
+- **Database Backend:** Supabase (PostgreSQL)
+- **Styling:** Tailwind CSS + Radix UI (shadcn/ui-inspired)
+- **Charts:** Recharts
+- **Icons:** Lucide React
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📦 Getting Started
 
-## Learn More
+1. Clone the repository:
+   ```bash
+   git clone git@github.com:joxadevoo/financeai.git
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. Install dependencies:
+   ```bash
+   bun install
+   ```
+   *(or `npm install`, `yarn install`, `pnpm install`)*
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Supabase Setup:
+   - Create a Supabase project and get the API keys.
+   - Run the provided `supabase_setup.sql` script in your Supabase SQL Editor to provision tables and policies.
+   - Fill in your `.env.local`:
+     ```env
+     NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+     NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+     ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. Run the development server:
+   ```bash
+   bun run dev
+   ```
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
