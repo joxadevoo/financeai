@@ -47,7 +47,7 @@ export function ExpenseList() {
   }
 
   return (
-    <Card className="shadow-sm border-neutral-200 dark:border-neutral-800">
+    <Card className="shadow-sm border-neutral-200 dark:border-neutral-800 w-full overflow-hidden">
       <div className="flex justify-end p-4 border-b">
         <ExportButton 
            data={expenses} 

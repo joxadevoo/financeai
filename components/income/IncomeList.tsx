@@ -25,7 +25,7 @@ export function IncomeList() {
   const mapDataForPdf = (item: any) => [item.name, item.type, item.frequency, item.amount.toString(), formatDate(item.date || new Date().toISOString())]
 
   return (
-    <Card className="shadow-sm border-neutral-200 dark:border-neutral-800">
+    <Card className="shadow-sm border-neutral-200 dark:border-neutral-800 w-full overflow-hidden">
       <div className="flex justify-end p-4 border-b">
         <ExportButton 
           data={incomes} 

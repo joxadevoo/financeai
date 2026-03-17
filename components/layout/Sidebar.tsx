@@ -48,7 +48,7 @@ export function Sidebar({ onItemClick }: SidebarProps = {}) {
         </Link>
       </div>
 
-      <div className="flex-1 overflow-y-auto py-4">
+      <div className="flex-1 overflow-y-auto min-h-0 py-4">
         <nav className="space-y-1 px-3">
           {navItems.map((item) => {
             const isActive = pathname === item.href

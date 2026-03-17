@@ -187,7 +187,7 @@ export function InvestmentCalc() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
-        <Card className="col-span-1 md:col-span-2 shadow-sm border-neutral-200 dark:border-neutral-800">
+        <Card className="col-span-1 md:col-span-2 shadow-sm border-neutral-200 dark:border-neutral-800 w-full overflow-hidden">
           <CardHeader>
             <CardTitle>{t.investments.portfolioAssets}</CardTitle>
           </CardHeader>

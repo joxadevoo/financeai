@@ -11,7 +11,7 @@ interface MobileNavProps {
 export function MobileNav({ isOpen, onClose }: MobileNavProps) {
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent side="left" className="p-0 w-72">
+      <SheetContent side="left" className="p-0 w-72 h-[100dvh]">
         <Sidebar onItemClick={onClose} />
       </SheetContent>
     </Sheet>
