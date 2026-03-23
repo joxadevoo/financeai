@@ -5,6 +5,8 @@ import { Sidebar } from '@/components/layout/Sidebar'
 import { Topbar } from '@/components/layout/Topbar'
 import { MobileNav } from '@/components/layout/MobileNav'
 import { useFinanceStore } from '@/lib/store/useFinanceStore'
+import { AppLock } from '@/components/auth/AppLock'
+import { useLockStore } from '@/lib/store/useLockStore'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -13,6 +15,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   useEffect(() => {
     fetchData()
   }, [fetchData])
+
+  useEffect(() => {
+    const lockState = useLockStore.getState()
+    if (lockState.pin) lockState.lock() // Dastlabki kirganda yopish
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        const currentLockState = useLockStore.getState()
+        if (currentLockState.pin) currentLockState.lock()
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }, [])
 
   return (
     <div className="flex bg-neutral-50 dark:bg-neutral-950 w-full h-[100dvh] overflow-hidden">
@@ -34,6 +50,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* Mobile Navigation Sheet */}
       <MobileNav isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      
+      {/* App Lock Screen (Full screen PIN lock overlay) */}
+      <AppLock />
     </div>
   )
 }
