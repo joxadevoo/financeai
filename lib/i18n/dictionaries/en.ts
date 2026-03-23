@@ -26,6 +26,7 @@ export const en = {
     exportLogs: 'Export Logs',
     exportToExcel: 'Export to Excel (.xlsx)',
     exportToPdf: 'Export to PDF (.pdf)',
+    installApp: 'Install App',
   },
   overview: {
     title: 'Dashboard overview',
@@ -72,7 +73,7 @@ export const en = {
   },
   aiTips: {
     title: 'AI Insights',
-    description: 'Personalized financial advice from Claude',
+    description: 'Personalized financial advice from GPT-4o',
     chatWithAdvisor: 'Chat with AI Advisor',
     impactHigh: 'High Impact',
     impactMedium: 'Medium Impact',
@@ -214,18 +215,22 @@ export const en = {
   },
   aiAdvisor: {
     title: 'AI Advisor',
-    description: 'Your personal financial assistant powered by Claude. Ask anything about your budget, savings, or investments.',
+    description: 'Your personal financial assistant powered by GPT-4o. Ask anything about your budget, savings, or investments.',
     howCanIHelp: 'How can I help your finances today?',
     whatICanDo: 'I can analyze your spending, help you create a budget, or explain complex investment concepts simply.',
-    claudeIsThinking: 'Claude is thinking...',
+    claudeIsThinking: 'GPT-4o is thinking...',
     inputPlaceholder: 'Ask about your finances, budgets, or investments...',
-    disclaimer: 'AI Advisor uses Claude 3.5 Sonnet and may produce inaccurate information. Please verify important financial decisions.',
+    disclaimer: 'AI Advisor uses GPT-4o and may produce inaccurate information. Please verify important financial decisions.',
     quickQuestion1: 'Review my current monthly budget',
     quickPrompt1: 'Can you analyze my current monthly expenses and income and suggest where I can cut back to increase my savings?',
     quickQuestion2: 'How to build an Emergency Fund?',
     quickPrompt2: 'What is an emergency fund, how much should I have in it, and what\'s the best strategy to build one quickly?',
     quickQuestion3: 'Explain compounding interest',
-    quickPrompt3: 'Can you explain how compound interest works with a simple example of investing 1,000,000 UZS monthly?'
+    quickPrompt3: 'Can you explain how compound interest works with a simple example of investing 1,000,000 UZS monthly?',
+    suggestion1: 'Analyze my current monthly expenses',
+    suggestion2: 'Where can I save more money?',
+    suggestion3: 'What does my budget breakdown look like?',
+    suggestion4: 'What is my emergency fund status?'
   }
 }
 

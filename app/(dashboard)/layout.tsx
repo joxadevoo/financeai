@@ -15,18 +15,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [fetchData])
 
   return (
-    <div className="flex min-h-[100dvh] bg-neutral-50 dark:bg-neutral-950 w-full max-w-full overflow-x-hidden">
+    <div className="flex bg-neutral-50 dark:bg-neutral-950 w-full h-[100dvh] overflow-hidden">
       {/* Desktop Sidebar */}
-      <div className="hidden md:flex w-64 flex-col fixed inset-y-0 z-50">
+      <div className="hidden md:flex w-64 flex-col border-r h-full flex-shrink-0 z-50 bg-background">
         <Sidebar />
       </div>
 
-      <div className="flex-1 md:ml-64 flex flex-col min-h-screen w-full max-w-full md:w-[calc(100%-16rem)] overflow-x-hidden">
+      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
         <Topbar onMenuClick={() => setIsSidebarOpen(true)} />
         
         {/* Main Content Area */}
-        <main className="flex-1 p-4 md:p-8 pt-6 w-full max-w-full overflow-x-hidden">
-          <div className="max-w-7xl mx-auto space-y-6">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden min-w-0 p-4 md:p-8 pt-6 w-full">
+          <div className="max-w-7xl mx-auto space-y-6 min-w-0 w-full">
             {children}
           </div>
         </main>

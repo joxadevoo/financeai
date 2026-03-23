@@ -28,6 +28,7 @@ export const uz: Dictionary = {
     exportLogs: 'Hisobotni yuklab olish',
     exportToExcel: 'Excel formatda hisobot (.xlsx)',
     exportToPdf: 'PDF formatda hisobot (.pdf)',
+    installApp: 'Ilovani O\'rnatish',
   },
   overview: {
     title: 'Bosh sahifa',
@@ -74,7 +75,7 @@ export const uz: Dictionary = {
   },
   aiTips: {
     title: 'AI Tahlillari',
-    description: 'Claude tomonidan shaxsiy moliyaviy maslahatlar',
+    description: 'GPT-4o tomonidan shaxsiy moliyaviy maslahatlar',
     chatWithAdvisor: 'AI bilan suhbat',
     impactHigh: 'Yuqori ta\'sir',
     impactMedium: 'O\'rta ta\'sir',
@@ -216,17 +217,21 @@ export const uz: Dictionary = {
   },
   aiAdvisor: {
     title: 'AI Maslahatchi',
-    description: 'Claude tomonidan yaratilgan shaxsiy moliyaviy yordamchingiz. Byudjet, jamg\'arma yoki investitsiyalar haqida xohlagan narsangizni so\'rang.',
+    description: 'GPT-4o tomonidan yaratilgan shaxsiy moliyaviy yordamchingiz. Byudjet, jamg\'arma yoki investitsiyalar haqida xohlagan narsangizni so\'rang.',
     howCanIHelp: 'Bugun moliyaviy ishlaringizda qanday yordam bera olaman?',
     whatICanDo: 'Xarajatlaringizni tahlil qila olaman, byudjet tuzishga yordam beraman yoki murakkab investitsiya tushunchalarini oddiy qilib tushuntirib beraman.',
-    claudeIsThinking: 'Claude o\'ylamoqda...',
+    claudeIsThinking: 'GPT-4o o\'ylamoqda...',
     inputPlaceholder: 'Moliya, byudjet yoki investitsiyalar haqida so\'rang...',
-    disclaimer: 'AI Maslahatchi Claude 3.5 Sonnet dan foydalanadi va noaniq ma\'lumot berishi mumkin. Muhim moliyaviy qarorlarni o\'zingiz tekshiring.',
+    disclaimer: 'AI Maslahatchi GPT-4o dan foydalanadi va noaniq ma\'lumot berishi mumkin. Muhim moliyaviy qarorlarni o\'zingiz tekshiring.',
     quickQuestion1: 'Joriy oylik byudjetimni ko\'rib chiqish',
     quickPrompt1: 'Mening joriy oylik xarajatlarim va daromadlarimni tahlil qilib, jamg\'armamni oshirish uchun qayerdan qisqartirishim mumkinligini maslahat bera olasizmi?',
     quickQuestion2: 'Favqulodda jamg\'armani qanday shakllantirish mumkin?',
     quickPrompt2: 'Favqulodda jamg\'arma nima, unda qancha pul bo\'lishi kerak va uni tezroq shakllantirishning eng yaxshi strategiyasi qanday?',
     quickQuestion3: 'Murakkab foiz qanday ishlashini tushuntiring',
-    quickPrompt3: 'Har oy 1 000 000 UZS sarmoya kiritish orqali murakkab foiz qanday ishlashini oddiy misol bilan tushuntirib bera olasizmi?'
+    quickPrompt3: 'Har oy 1 000 000 UZS sarmoya kiritish orqali murakkab foiz qanday ishlashini oddiy misol bilan tushuntirib bera olasizmi?',
+    suggestion1: 'Joriy oylik xarajatlarimni tahlil qilib ber',
+    suggestion2: 'Qaysi kategoriyalarda pul tejashim mumkin?',
+    suggestion3: 'Mening byudjet taqsimotim qanday?',
+    suggestion4: 'Favqulodda jamg\'arma holatim qanday?'
   }
 }

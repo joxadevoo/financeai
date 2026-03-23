@@ -12,10 +12,13 @@ import {
   PlusCircle, 
   Settings, 
   TrendingUp,
-  BrainCircuit
+  BrainCircuit,
+  Download
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import { useState, useEffect } from 'react'
+import { toast } from 'sonner'
 
 const getNavItems = (t: any) => [
   { name: t.common.dashboard, href: '/', icon: Home },
@@ -36,6 +39,52 @@ export function Sidebar({ onItemClick }: SidebarProps = {}) {
   const pathname = usePathname()
   const { t } = useTranslation()
   const navItems = getNavItems(t)
+
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
+  const [isInstallable, setIsInstallable] = useState(false)
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: any) => {
+      // Brauzerning standart promptini to'xtatish
+      e.preventDefault()
+      // Eventni saqlash, keyinroq chaqirish uchun
+      setDeferredPrompt(e)
+      // Tugmani ko'rsatish
+      setIsInstallable(true)
+    }
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    }
+  }, [])
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) {
+      toast.info('Ilovani o\'rnatish', {
+        description: 'Ilovani o\'rnatish uchun brauzeringiz menyusidan "Add to Home Screen" yoki "Install App" tugmasini bosing.',
+        duration: 5000,
+      })
+      return
+    }
+
+    // Promptni ko'rsatish
+    deferredPrompt.prompt()
+    
+    // Foydalanuvchi tanlovini kutish
+    const { outcome } = await deferredPrompt.userChoice
+    
+    if (outcome === 'accepted') {
+      console.log('Foydalanuvchi PWA ornatishni qabul qildi')
+    } else {
+      console.log('Foydalanuvchi PWA ornatishni rad etdi')
+    }
+    
+    // Prompt bir marta ishlatilishi kerak
+    setDeferredPrompt(null)
+    setIsInstallable(false)
+  }
 
   return (
     <div className="flex flex-col h-full bg-background border-r">
@@ -84,7 +133,14 @@ export function Sidebar({ onItemClick }: SidebarProps = {}) {
         </nav>
       </div>
 
-      <div className="p-4 border-t">
+      <div className="p-4 border-t space-y-1">
+        <button
+          onClick={handleInstallClick}
+          className="flex items-center w-full px-3 py-2.5 text-sm font-medium rounded-md text-emerald-600 bg-emerald-50 hover:bg-emerald-100 dark:text-emerald-400 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40 transition-colors"
+        >
+          <Download className="mr-3 h-5 w-5" />
+          {t.common.installApp}
+        </button>
         <Link
           href="/settings"
           className="flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800 transition-colors"
