@@ -11,6 +11,7 @@ export const uz: Dictionary = {
     investments: 'Kiritmalar (Investitsiya)',
     goals: 'Maqsadlar',
     subscriptions: 'Obunalar',
+    smartReport: 'Smart Hisobot',
     aiAdvisor: 'AI Maslahatchi',
     settings: 'Sozlamalar',
     logout: 'Chiqish',

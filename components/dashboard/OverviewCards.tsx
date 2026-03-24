@@ -6,6 +6,7 @@ import { formatCurrency } from '@/lib/utils/formatters'
 import { useFinanceStore } from '@/lib/store/useFinanceStore'
 import { calculateTotalIncome, calculateTotalExpenses } from '@/lib/utils/calculations'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import { useCurrencyStore } from '@/lib/store/useCurrencyStore'
 import { motion, Variants } from 'framer-motion'
 
 const container: Variants = {
@@ -26,11 +27,28 @@ const item: Variants = {
 export function OverviewCards() {
   const { incomes, expenses, investments } = useFinanceStore()
   const { t } = useTranslation()
+  const { currency, rateToUzs } = useCurrencyStore()
   
-  const totalIncome = calculateTotalIncome(incomes)
-  const totalExpense = calculateTotalExpenses(expenses)
-  const balance = totalIncome - totalExpense
-  const savings = investments.reduce((acc, inv) => acc + Number(inv.initialAmount), 0)
+  const rawIncome = calculateTotalIncome(incomes)
+  const rawExpense = calculateTotalExpenses(expenses)
+  const rawBalance = rawIncome - rawExpense
+  const rawSavings = investments.reduce((acc, inv) => acc + Number(inv.initialAmount), 0)
+
+  // Convert if USD
+  const isUSD = currency === 'USD'
+  const convertedIncome = isUSD ? rawIncome / rateToUzs : rawIncome
+  const convertedExpense = isUSD ? rawExpense / rateToUzs : rawExpense
+  const convertedBalance = isUSD ? rawBalance / rateToUzs : rawBalance
+  const convertedSavings = isUSD ? rawSavings / rateToUzs : rawSavings
+
+  // Helper formatter to keep existing formatCurrency function pure
+  const displayValue = (val: number) => {
+    const formatted = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: isUSD ? 2 : 0,
+      maximumFractionDigits: isUSD ? 2 : 0,
+    }).format(val).replace(/,/g, ' ');
+    return isUSD ? `$${formatted}` : `${formatted} so'm`;
+  }
 
   return (
     <motion.div 
@@ -47,7 +65,7 @@ export function OverviewCards() {
           <Wallet className="h-4 w-4 text-white/80" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{formatCurrency(balance)}</div>
+          <div className="text-2xl font-bold">{displayValue(convertedBalance)}</div>
           <p className="text-xs text-white/60 mt-1">+2.5% {t.overview.fromLastMonth}</p>
         </CardContent>
         </Card>
@@ -63,7 +81,7 @@ export function OverviewCards() {
             </div>
           </CardHeader>
           <CardContent className="relative z-10">
-          <div className="text-2xl font-bold">{formatCurrency(totalIncome)}</div>
+          <div className="text-2xl font-bold">{displayValue(convertedIncome)}</div>
           <p className="text-xs text-emerald-500 flex items-center mt-1">
             <TrendingUp className="h-3 w-3 mr-1" /> +12% {t.overview.fromLastMonth}
           </p>
@@ -81,7 +99,7 @@ export function OverviewCards() {
             </div>
           </CardHeader>
           <CardContent className="relative z-10">
-          <div className="text-2xl font-bold">{formatCurrency(totalExpense)}</div>
+          <div className="text-2xl font-bold">{displayValue(convertedExpense)}</div>
           <p className="text-xs text-red-500 flex items-center mt-1">
             <TrendingUp className="h-3 w-3 mr-1" /> +4% {t.overview.fromLastMonth}
           </p>
@@ -99,10 +117,10 @@ export function OverviewCards() {
             </div>
           </CardHeader>
           <CardContent className="relative z-10">
-          <div className="text-2xl font-bold">{formatCurrency(savings)}</div>
-          <p className="text-xs text-muted-foreground mt-1">{t.overview.target}: {formatCurrency(10000000)}</p>
+          <div className="text-2xl font-bold">{displayValue(convertedSavings)}</div>
+          <p className="text-xs text-muted-foreground mt-1">{t.overview.target}: {displayValue(isUSD ? 10000000 / rateToUzs : 10000000)}</p>
           <div className="w-full bg-neutral-200 dark:bg-neutral-800 rounded-full h-1.5 mt-2">
-            <div className="bg-gradient-to-r from-indigo-500 to-purple-500 h-1.5 rounded-full transition-all duration-1000" style={{ width: `${Math.min(100, (savings / 10000000) * 100)}%` }}></div>
+            <div className="bg-gradient-to-r from-indigo-500 to-purple-500 h-1.5 rounded-full transition-all duration-1000" style={{ width: `${Math.min(100, (rawSavings / 10000000) * 100)}%` }}></div>
           </div>
         </CardContent>
         </Card>

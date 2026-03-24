@@ -12,6 +12,10 @@ import {
 } from '@/components/ui/select'
 import { useFinanceStore } from '@/lib/store/useFinanceStore'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import { Loader2, Camera } from 'lucide-react'
+import { toast } from 'sonner'
+import { parseReceiptAction } from '@/lib/actions/ai'
+import { useRef } from 'react'
 
 interface ExpenseFormProps {
   onSuccess?: () => void
@@ -20,7 +24,9 @@ interface ExpenseFormProps {
 export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
   const addExpense = useFinanceStore((state) => state.addExpense)
   const [loading, setLoading] = useState(false)
-  const { t } = useTranslation()
+  const [scanning, setScanning] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const { t, language } = useTranslation()
   
   const [formData, setFormData] = useState({
     name: '',
@@ -28,6 +34,39 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
     category: 'Food',
     date: new Date().toISOString().split('T')[0]
   })
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setScanning(true)
+    try {
+      const reader = new FileReader()
+      reader.onloadend = async () => {
+        const base64Str = reader.result as string
+        const res = await parseReceiptAction(base64Str)
+        
+        if (res.success && res.data) {
+          setFormData({
+            ...formData,
+            name: res.data.name,
+            amount: res.data.amount.toString(),
+            category: res.data.category,
+            date: res.data.date || new Date().toISOString().split('T')[0]
+          })
+          toast.success(language === 'uz' ? 'Chek muvaffaqiyatli o\'qildi!' : 'Receipt parsed successfully!')
+        } else {
+          toast.error(language === 'uz' ? 'Chekni o\'qib bo\'lmadi.' : 'Could not parse receipt.')
+        }
+        setScanning(false)
+      }
+      reader.readAsDataURL(file)
+    } catch (error) {
+      console.error(error)
+      setScanning(false)
+      toast.error('Error scanning receipt')
+    }
+  }
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -106,8 +145,26 @@ export function ExpenseForm({ onSuccess }: ExpenseFormProps) {
         </div>
       </div>
 
-      <div className="pt-4 flex justify-end">
-        <Button type="submit" disabled={loading} className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white">
+      <div className="pt-4 flex gap-2 justify-end">
+        <input 
+          type="file" 
+          accept="image/*" 
+          capture="environment" 
+          className="hidden" 
+          ref={fileInputRef}
+          onChange={handleFileChange}
+        />
+        <Button 
+          type="button" 
+          variant="outline" 
+          title={language === 'uz' ? 'Chekni skanerlash' : 'Scan Receipt'}
+          className="shrink-0 border-indigo-200 text-indigo-700 hover:bg-indigo-50 dark:border-indigo-800 dark:text-indigo-400 dark:hover:bg-indigo-900/30"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={loading || scanning}
+        >
+          {scanning ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+        </Button>
+        <Button type="submit" disabled={loading || scanning} className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white flex-1">
           {loading ? t.expenses.adding : t.expenses.addExpense}
         </Button>
       </div>

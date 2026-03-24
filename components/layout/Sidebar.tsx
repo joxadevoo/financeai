@@ -15,7 +15,9 @@ import {
   BrainCircuit,
   Download,
   Target,
-  Repeat
+  Repeat,
+  FileText,
+  Users
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useTranslation } from '@/lib/i18n/useTranslation'
@@ -29,6 +31,8 @@ const getNavItems = (t: any) => [
   { name: t.common.budgetPlanner, href: '/budget', icon: PieChart },
   { name: t.common.subscriptions, href: '/subscriptions', icon: Repeat },
   { name: t.common.savingsSimulator, href: '/savings', icon: PiggyBank },
+  { name: 'Family', href: '/family', icon: Users },
+  { name: t.common.smartReport, href: '/report', icon: FileText },
   { name: t.common.emergencyFund, href: '/emergency', icon: BarChart3 },
   { name: t.common.investments, href: '/investment', icon: LineChart },
   { name: t.common.goals, href: '/goals', icon: Target },

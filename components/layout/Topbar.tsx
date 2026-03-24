@@ -1,10 +1,11 @@
 'use client'
 
-import { Bell, Menu, Moon, Sun, Search, LogOut } from 'lucide-react'
+import { Menu, Bell, Moon, Sun, Search, LogOut, DollarSign, Coins } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useTheme } from 'next-themes'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import { useCurrencyStore } from '@/lib/store/useCurrencyStore'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,11 +28,13 @@ interface TopbarProps {
 export function Topbar({ onMenuClick }: TopbarProps) {
   const { setTheme, theme } = useTheme()
   const { t } = useTranslation()
+  const { currency, setCurrency, fetchRate } = useCurrencyStore()
   const supabase = createClient()
   const router = useRouter()
   const [userEmail, setUserEmail] = useState<string | null>(null)
 
   useEffect(() => {
+    fetchRate() // fetch live rate on load
     const getUserData = async () => {
       const { data } = await supabase.auth.getUser()
       if (data.user) {
@@ -71,10 +74,14 @@ export function Topbar({ onMenuClick }: TopbarProps) {
       </div>
       
       <div className="flex items-center gap-x-2 sm:gap-x-4 lg:gap-x-6">
-        <Button variant="ghost" size="icon" className="relative text-neutral-600 dark:text-neutral-400">
-          <span className="sr-only">View notifications</span>
-          <Bell className="h-5 w-5" aria-hidden="true" />
-          <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500"></span>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setCurrency(currency === 'UZS' ? 'USD' : 'UZS')}
+          className="text-neutral-600 dark:text-neutral-400 font-medium hidden sm:flex"
+        >
+          {currency === 'UZS' ? <Coins className="h-4 w-4 mr-1" /> : <DollarSign className="h-4 w-4 mr-1" />}
+          {currency}
         </Button>
 
         <LanguageSwitcher />

@@ -15,7 +15,7 @@ export default function ExpensesPage() {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-in fade-in duration-500 w-full max-w-full overflow-hidden">
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{t.expenses.title}</h1>

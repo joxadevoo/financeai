@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { OverviewCards } from '@/components/dashboard/OverviewCards'
 import { TrendChart } from '@/components/dashboard/TrendChart'
 import { AiTips } from '@/components/dashboard/AiTips'
+import { BadgeGrid } from '@/components/achievements/BadgeGrid'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 
 export default function DashboardPage() {
@@ -63,6 +64,8 @@ export default function DashboardPage() {
           <AiTips />
         </div>
       </div>
+
+      <BadgeGrid />
     </div>
   )
 }

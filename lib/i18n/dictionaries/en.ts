@@ -9,6 +9,7 @@ export const en = {
     investments: 'Investments',
     goals: 'Goals',
     subscriptions: 'Subscriptions',
+    smartReport: 'Smart Report',
     aiAdvisor: 'AI Advisor',
     settings: 'Settings',
     logout: 'Log out',
