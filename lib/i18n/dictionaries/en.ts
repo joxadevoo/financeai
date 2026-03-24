@@ -5,12 +5,14 @@ export const en = {
     expenses: 'Expenses',
     budgetPlanner: 'Budget Planner',
     savingsSimulator: 'Savings Simulator',
+    family: 'Family',
     emergencyFund: 'Emergency Fund',
     investments: 'Investments',
     goals: 'Goals',
     subscriptions: 'Subscriptions',
     smartReport: 'Smart Report',
     aiAdvisor: 'AI Advisor',
+    debts: 'Debts',
     settings: 'Settings',
     logout: 'Log out',
     search: 'Search transactions, advice, or targets...',
@@ -302,6 +304,12 @@ export const en = {
     pinRemoved: 'PIN code removed',
     currentPin: 'Enter current PIN',
     incorrectPin: 'Incorrect PIN',
+  },
+  aiInput: {
+    placeholder: "Type a text (e.g. 'Spent 20k on Taxi today')",
+    buttonText: "Add",
+    success: "Expense saved: ",
+    error: "Failed to parse. Please rephrase."
   }
 }
 

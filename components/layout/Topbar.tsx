@@ -7,6 +7,8 @@ import { LanguageSwitcher } from './LanguageSwitcher'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import { useCurrencyStore } from '@/lib/store/useCurrencyStore'
 import { useFamilyStore } from '@/lib/store/useFamilyStore'
+import { useProfileStore } from '@/lib/store/useProfileStore'
+import { StoryHighlight } from './StoryHighlight'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,6 +33,7 @@ export function Topbar({ onMenuClick }: TopbarProps) {
   const { t } = useTranslation()
   const { currency, setCurrency, fetchRate } = useCurrencyStore()
   const { links, fetchLinks, acceptInvite, removeLink } = useFamilyStore()
+  const { profile } = useProfileStore()
   const supabase = createClient()
   const router = useRouter()
   const [userEmail, setUserEmail] = useState<string | null>(null)
@@ -146,6 +149,10 @@ export function Topbar({ onMenuClick }: TopbarProps) {
 
         <LanguageSwitcher />
 
+        <div className="flex items-center ml-1 sm:ml-2">
+          <StoryHighlight />
+        </div>
+
         <Button
           variant="ghost"
           size="icon"
@@ -156,6 +163,12 @@ export function Topbar({ onMenuClick }: TopbarProps) {
           <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">Toggle theme</span>
         </Button>
+
+        {profile && profile.subscription_plan !== 'free' && (
+          <div className="hidden sm:flex items-center px-2 py-1 bg-gradient-to-r from-amber-200 to-yellow-400 dark:from-amber-700/50 dark:to-orange-600/50 text-amber-900 dark:text-amber-100 rounded-lg text-xs font-bold uppercase tracking-wider border border-amber-300 dark:border-amber-500/30 cursor-pointer" onClick={() => router.push('/subscription')}>
+            {profile.subscription_plan}
+          </div>
+        )}
 
         <div className="hidden sm:block h-6 w-px bg-neutral-200 dark:bg-neutral-800" aria-hidden="true" />
 

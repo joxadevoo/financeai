@@ -9,14 +9,17 @@ import { AppLock } from '@/components/auth/AppLock'
 import { useLockStore } from '@/lib/store/useLockStore'
 import { GlobalAIAssistant } from '@/components/ai/GlobalAIAssistant'
 import { CommandPalette } from '@/components/layout/CommandPalette'
+import { useProfileStore } from '@/lib/store/useProfileStore'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const fetchData = useFinanceStore(state => state.fetchData)
+  const fetchProfile = useProfileStore(state => state.fetchProfile)
 
   useEffect(() => {
     fetchData()
-  }, [fetchData])
+    fetchProfile()
+  }, [fetchData, fetchProfile])
 
   useEffect(() => {
     const lockState = useLockStore.getState()

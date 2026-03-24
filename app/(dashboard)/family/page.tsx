@@ -8,12 +8,16 @@ import { useTranslation } from '@/lib/i18n/useTranslation'
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { useFamilyStore } from '@/lib/store/useFamilyStore'
+import { useProfileStore } from '@/lib/store/useProfileStore'
 import { createClient } from '@/lib/supabase/client'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { FamilyStats } from '@/components/family/FamilyStats'
+import { useRouter } from 'next/navigation'
 
 export default function FamilyPage() {
   const { language } = useTranslation()
+  const router = useRouter()
+  const { profile } = useProfileStore()
   const { links, isLoading, fetchLinks, inviteMember, acceptInvite, removeLink, updateMemberTag } = useFamilyStore()
   const [email, setEmail] = useState('')
   const [adding, setAdding] = useState(false)
@@ -66,47 +70,64 @@ export default function FamilyPage() {
 
       <div className="grid md:grid-cols-2 gap-8 mt-10">
         <div className="space-y-6">
-          <Card className="border-rose-100 dark:border-rose-900/50 shadow-md">
-            <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
-              <Sparkles className="h-5 w-5" />
-              Premium Feature
-            </CardTitle>
-            <CardDescription>
-              {language === 'uz' 
-                ? 'Hozircha faqat premium a\'zolar va beta testchilari uchun yopiq jamoaviy hamyonlar tizimi. Taklifnoma yuborib joyingizni band qiling.' 
-                : 'Currently in closed beta for premium members. Send an invite to reserve your spot.'}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleInvite} className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">
-                  {language === 'uz' ? 'Oila a\'zongiz e-maili' : 'Family Member Email'}
-                </label>
-                <div className="flex gap-2">
-                  <Input 
-                    type="email" 
-                    placeholder="partner@example.com" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="flex-1"
-                  />
-                </div>
+          <Card className="border-rose-100 dark:border-rose-900/50 shadow-md relative overflow-hidden">
+            {profile?.subscription_plan !== 'family' && (
+              <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center p-6 text-center">
+                <Sparkles className="h-10 w-10 text-amber-500 mb-3" />
+                <h3 className="text-xl font-bold mb-2">
+                  {language === 'uz' ? 'Family Ta\'rifi kerak' : 'Family Plan Required'}
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {language === 'uz' 
+                    ? 'Oila a\'zolarini qo\'shish va byudjetni birgalikda boshqarish uchun "Family" ta\'rifiga o\'ting.'
+                    : 'Upgrade to the Family plan to invite members and share your budget.'}
+                </p>
+                <Button onClick={() => router.push('/subscription')} className="bg-amber-500 hover:bg-amber-600 font-medium">
+                  {language === 'uz' ? 'Ta\'riflarga o\'tish' : 'View Plans'}
+                </Button>
               </div>
-              <Button type="submit" disabled={adding} className="w-full bg-rose-600 hover:bg-rose-700 text-white">
-                <Mail className="w-4 h-4 mr-2" />
-                {adding 
-                  ? (language === 'uz' ? 'Yuborilmoqda...' : 'Sending...') 
-                  : (language === 'uz' ? 'Taklif yuborish' : 'Send Invite')}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+            )}
+            
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
+                <Sparkles className="h-5 w-5" />
+                {language === 'uz' ? 'Oilaviy Hamyonlar' : 'Shared Wallets'}
+              </CardTitle>
+              <CardDescription>
+                {language === 'uz' 
+                  ? 'Yopiq jamoaviy hamyonlar tizimi. Taklifnoma yuborib joyingizni band qiling.' 
+                  : 'Closed shared wallets system. Send an invite to start sharing.'}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleInvite} className={`space-y-4 ${profile?.subscription_plan !== 'family' ? 'opacity-50 pointer-events-none' : ''}`}>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">
+                    {language === 'uz' ? 'Oila a\'zongiz e-maili' : 'Family Member Email'}
+                  </label>
+                  <div className="flex gap-2">
+                    <Input 
+                      type="email" 
+                      placeholder="partner@example.com" 
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+                <Button type="submit" disabled={adding} className="w-full bg-rose-600 hover:bg-rose-700 text-white">
+                  <Mail className="w-4 h-4 mr-2" />
+                  {adding 
+                    ? (language === 'uz' ? 'Yuborilmoqda...' : 'Sending...') 
+                    : (language === 'uz' ? 'Taklif yuborish' : 'Send Invite')}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
 
-        <FamilyStats />
-      </div>
+          <FamilyStats />
+        </div>
 
       <div className="space-y-6">
           {pendingReceived.length > 0 && (

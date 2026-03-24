@@ -5,14 +5,16 @@ export const uz: Dictionary = {
     dashboard: 'Bosh sahifa',
     income: 'Daromadlar',
     expenses: 'Xarajatlar',
-    budgetPlanner: 'Budjet Rejasi',
+    budgetPlanner: 'Byudjet Rejalashtiruvchi',
     savingsSimulator: 'Jamg\'arma Simulyatori',
+    family: 'Oila',
     emergencyFund: 'Favqulodda Jamg\'arma',
     investments: 'Kiritmalar (Investitsiya)',
     goals: 'Maqsadlar',
     subscriptions: 'Obunalar',
     smartReport: 'Smart Hisobot',
     aiAdvisor: 'AI Maslahatchi',
+    debts: 'Qarzlar',
     settings: 'Sozlamalar',
     logout: 'Chiqish',
     search: 'Tranzaksiya, maslahat yoki maqsadlarni qidirish...',
@@ -304,5 +306,11 @@ export const uz: Dictionary = {
     pinRemoved: 'PIN kod o\'chirildi',
     currentPin: 'Joriy PIN kodni kiriting',
     incorrectPin: 'Noto\'g\'ri PIN kod',
+  },
+  aiInput: {
+    placeholder: "Matn orqali kiritish (Masalan: 'Taksiga 20 ming so'm ketdi')",
+    buttonText: "Qo'shish",
+    success: "Xarajat saqlandi: ",
+    error: "Tahlil qilib bo'lmadi. Boshqacha yozib ko'ring."
   }
 }
