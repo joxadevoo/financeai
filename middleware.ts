@@ -83,7 +83,14 @@ export async function middleware(request: NextRequest) {
   if (user && isAuthRoute) {
     // Redirect authenticated users away from auth pages to dashboard
     const url = request.nextUrl.clone()
-    url.pathname = '/' // Dashboard home
+    url.pathname = '/dashboard' // Dashboard home
+    return NextResponse.redirect(url)
+  }
+
+  // If authenticated and trying to access landing page, redirect to dashboard
+  if (user && request.nextUrl.pathname === '/') {
+    const url = request.nextUrl.clone()
+    url.pathname = '/dashboard'
     return NextResponse.redirect(url)
   }
 

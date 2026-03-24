@@ -25,7 +25,7 @@ import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
 
 const getNavItems = (t: any) => [
-  { name: t.common.dashboard, href: '/', icon: Home },
+  { name: t.common.dashboard, href: '/dashboard', icon: Home },
   { name: t.common.income, href: '/income', icon: PlusCircle },
   { name: t.common.expenses, href: '/expenses', icon: CreditCard },
   { name: t.common.budgetPlanner, href: '/budget', icon: PieChart },
@@ -97,7 +97,7 @@ export function Sidebar({ onItemClick }: SidebarProps = {}) {
   return (
     <div className="flex flex-col h-full bg-background border-r">
       <div className="p-6">
-        <Link href="/" className="flex items-center gap-2 text-2xl font-bold">
+        <Link href="/dashboard" className="flex items-center gap-2 text-2xl font-bold">
           <TrendingUp className="h-8 w-8 text-blue-600 dark:text-blue-500" />
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">
             FinanceAI

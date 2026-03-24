@@ -3,27 +3,38 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Users, Mail, Sparkles, Heart } from 'lucide-react'
+import { Users, Mail, Sparkles, Heart, CheckCircle2, XCircle, Clock } from 'lucide-react'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import { motion } from 'framer-motion'
-import { useState } from 'react'
-import { toast } from 'sonner'
+import { useState, useEffect } from 'react'
+import { useFamilyStore } from '@/lib/store/useFamilyStore'
+import { createClient } from '@/lib/supabase/client'
 
 export default function FamilyPage() {
   const { language } = useTranslation()
+  const { links, isLoading, fetchLinks, inviteMember, acceptInvite, removeLink } = useFamilyStore()
   const [email, setEmail] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [adding, setAdding] = useState(false)
+  const [myEmail, setMyEmail] = useState<string | null>(null)
 
-  const handleInvite = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetchLinks()
+    createClient().auth.getUser().then(({ data }) => setMyEmail(data.user?.email || null))
+  }, [fetchLinks])
+
+  const handleInvite = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email) return
-    setLoading(true)
-    setTimeout(() => {
-      toast.success(language === 'uz' ? 'Taklifnoma yuborildi!' : 'Invitation sent!')
-      setEmail('')
-      setLoading(false)
-    }, 1500)
+    setAdding(true)
+    await inviteMember(email)
+    setEmail('')
+    setAdding(false)
   }
+
+  // Filter links
+  const pendingReceived = links.filter(l => l.member_email === myEmail && l.status === 'pending')
+  const pendingSent = links.filter(l => l.head_user_id !== null && l.member_email !== myEmail && l.status === 'pending') // Approx for now
+  const activeMembers = links.filter(l => l.status === 'accepted')
 
   return (
     <motion.div 
@@ -79,9 +90,9 @@ export default function FamilyPage() {
                   />
                 </div>
               </div>
-              <Button type="submit" disabled={loading} className="w-full bg-rose-600 hover:bg-rose-700 text-white">
+              <Button type="submit" disabled={adding} className="w-full bg-rose-600 hover:bg-rose-700 text-white">
                 <Mail className="w-4 h-4 mr-2" />
-                {loading 
+                {adding 
                   ? (language === 'uz' ? 'Yuborilmoqda...' : 'Sending...') 
                   : (language === 'uz' ? 'Taklif yuborish' : 'Send Invite')}
               </Button>
@@ -90,29 +101,95 @@ export default function FamilyPage() {
         </Card>
 
         <div className="space-y-6">
-          <div className="flex gap-4 items-start">
-            <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg shrink-0">
-              <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-lg">{language === 'uz' ? '2 kishidan 6 kishigacha' : 'Up to 6 members'}</h3>
-              <p className="text-muted-foreground text-sm mt-1">
-                Barcha a'zolar o'z telefonlaridan harajatlarni kiritib borishadi. Umumiy qoldiqni hammangiz birdaniga ko'rasiz.
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex gap-4 items-start">
-            <div className="bg-emerald-100 dark:bg-emerald-900/30 p-2 rounded-lg shrink-0">
-              <Heart className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-lg">{language === 'uz' ? 'Umumiy Maqsadlar' : 'Shared Goals'}</h3>
-              <p className="text-muted-foreground text-sm mt-1">
-                Yangi mashina yoki sayohat uchun oilaviy tarzda birgalikda pul yig'asiz. Qaysi a'zo qancha qadam qo'shganini kuzating.
-              </p>
-            </div>
-          </div>
+          {pendingReceived.length > 0 && (
+            <Card className="border-amber-200 dark:border-amber-900/50 shadow-sm bg-amber-50/50 dark:bg-amber-900/10">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-amber-600 flex items-center text-lg">
+                  <Clock className="w-5 h-5 mr-2" />
+                  {language === 'uz' ? 'Yangi taklifnomalar' : 'Pending Invites for You'}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {pendingReceived.map(link => (
+                  <div key={link.id} className="flex items-center justify-between bg-white dark:bg-neutral-900 p-3 rounded-lg shadow-sm border border-amber-100 dark:border-amber-900/30">
+                    <span className="text-sm font-medium">Sizni oilaviy guruhga qo'shishmoqchi</span>
+                    <div className="flex gap-2">
+                      <Button size="sm" onClick={() => acceptInvite(link.id)} className="bg-emerald-500 hover:bg-emerald-600 text-white h-8">
+                        {language === 'uz' ? 'Qabul' : 'Accept'}
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => removeLink(link.id)} className="text-red-500 border-red-200 hover:bg-red-50 h-8">
+                        Rad
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          )}
+
+          <Card className="shadow-sm">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center text-lg">
+                <Users className="w-5 h-5 mr-2 text-indigo-500" />
+                {language === 'uz' ? 'Jamoa a\'zolari' : 'Team Members'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between p-2 rounded-md hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 font-bold text-xs uppercase">
+                    {myEmail?.charAt(0) || 'ME'}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">{myEmail}</p>
+                    <p className="text-xs text-muted-foreground">Siz (You)</p>
+                  </div>
+                </div>
+              </div>
+              
+              {activeMembers.map(link => (
+                <div key={link.id} className="flex items-center justify-between p-2 rounded-md hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center text-emerald-600 font-bold text-xs uppercase">
+                      {link.member_email.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">{link.member_email}</p>
+                      <p className="text-xs text-emerald-500 flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" /> faol
+                      </p>
+                    </div>
+                  </div>
+                  <Button variant="ghost" size="icon" onClick={() => removeLink(link.id)} className="text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30">
+                    <XCircle className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))}
+
+              {pendingSent.map(link => (
+                <div key={link.id} className="flex items-center justify-between p-2 rounded-md hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors opacity-60">
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-500 font-bold text-xs uppercase">
+                      {link.member_email.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">{link.member_email}</p>
+                      <p className="text-xs text-amber-500 flex items-center gap-1">
+                        <Clock className="w-3 h-3" /> kutilmoqda
+                      </p>
+                    </div>
+                  </div>
+                  <Button variant="ghost" size="icon" onClick={() => removeLink(link.id)} className="text-neutral-400 hover:text-red-500">
+                    <XCircle className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))}
+
+              {activeMembers.length === 0 && pendingSent.length === 0 && (
+                <p className="text-sm text-muted-foreground text-center py-4">Boshqa a'zolar yo'q.</p>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </motion.div>

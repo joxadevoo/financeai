@@ -64,9 +64,9 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
     }
 
     const [incomesRes, expensesRes, investmentsRes] = await Promise.all([
-      supabase.from('income_sources').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
-      supabase.from('expenses').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
-      supabase.from('investments').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
+      supabase.from('income_sources').select('*').order('created_at', { ascending: false }),
+      supabase.from('expenses').select('*').order('created_at', { ascending: false }),
+      supabase.from('investments').select('*').order('created_at', { ascending: false })
     ])
 
     if (incomesRes.error) toast.error("Daromadlarni yuklashda xato: " + incomesRes.error.message)
