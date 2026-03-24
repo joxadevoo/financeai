@@ -7,6 +7,7 @@ import { MobileNav } from '@/components/layout/MobileNav'
 import { useFinanceStore } from '@/lib/store/useFinanceStore'
 import { AppLock } from '@/components/auth/AppLock'
 import { useLockStore } from '@/lib/store/useLockStore'
+import { GlobalAIAssistant } from '@/components/ai/GlobalAIAssistant'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -50,6 +51,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* Mobile Navigation Sheet */}
       <MobileNav isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      
+      <GlobalAIAssistant />
       
       {/* App Lock Screen (Full screen PIN lock overlay) */}
       <AppLock />

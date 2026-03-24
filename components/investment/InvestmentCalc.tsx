@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { formatCurrency, formatDate } from '@/lib/utils/formatters'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import { Plus, TrendingUp, Briefcase, Building, LineChart as LineChartIcon, Landmark } from 'lucide-react'
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts'
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
@@ -116,11 +117,9 @@ export function InvestmentCalc() {
 
         <Card className="shadow-sm border-neutral-200 dark:border-neutral-800 flex justify-center items-center p-6">
           <Dialog open={isAdding} onOpenChange={setIsAdding}>
-            <DialogTrigger asChild>
-              <Button className="w-full h-full min-h-[100px] border-dashed border-2 bg-neutral-50 hover:bg-neutral-100 text-neutral-600 dark:bg-neutral-900 dark:border-neutral-800 dark:hover:bg-neutral-800" variant="outline">
-                <Plus className="mr-2 h-5 w-5" />
-                {t.investments.addInvestment}
-              </Button>
+            <DialogTrigger className={cn(buttonVariants({ variant: 'outline' }), "w-full h-full min-h-[100px] border-dashed border-2 bg-neutral-50 hover:bg-neutral-100 text-neutral-600 dark:bg-neutral-900 dark:border-neutral-800 dark:hover:bg-neutral-800")}>
+              <Plus className="mr-2 h-5 w-5" />
+              {t.investments.addInvestment}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
@@ -241,9 +240,9 @@ export function InvestmentCalc() {
             <CardTitle>{t.investments.assetAllocation}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[250px] w-full">
+            <div className="h-[250px] w-full mt-4">
               <ClientOnly>
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" minHeight={1} minWidth={1}>
                   <PieChart>
                     <Pie
                       data={chartData}

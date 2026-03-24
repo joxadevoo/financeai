@@ -3,7 +3,8 @@
 import { IncomeList } from '@/components/income/IncomeList'
 import { IncomeForm } from '@/components/income/IncomeForm'
 import { Plus } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 
@@ -24,11 +25,9 @@ export default function IncomePage() {
         </div>
         
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-md">
-              <Plus className="mr-2 h-4 w-4" />
-              {t.income.addIncome}
-            </Button>
+          <DialogTrigger className={cn(buttonVariants(), "bg-blue-600 hover:bg-blue-700 text-white shadow-md")}>
+            <Plus className="mr-2 h-4 w-4" />
+            {t.income.addIncome}
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>

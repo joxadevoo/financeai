@@ -3,7 +3,8 @@
 import { ExpenseList } from '@/components/expenses/ExpenseList'
 import { ExpenseForm } from '@/components/expenses/ExpenseForm'
 import { Plus } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 
@@ -24,11 +25,9 @@ export default function ExpensesPage() {
         </div>
         
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-red-600 hover:bg-red-700 text-white shadow-md">
-              <Plus className="mr-2 h-4 w-4" />
-              {t.expenses.addExpense}
-            </Button>
+          <DialogTrigger className={cn(buttonVariants(), "bg-red-600 hover:bg-red-700 text-white shadow-md")}>
+            <Plus className="mr-2 h-4 w-4" />
+            {t.expenses.addExpense}
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>

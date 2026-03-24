@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { createClient } from '@/lib/supabase/client'
+import { toast } from 'sonner'
 
 export interface Income {
   id: string
@@ -15,7 +16,9 @@ export interface Expense {
   name: string
   amount: number
   category: string
+  subcategory?: string
   date: string
+  isRecurring?: boolean
   created_at?: string
 }
 
@@ -66,6 +69,10 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
       supabase.from('investments').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
     ])
 
+    if (incomesRes.error) toast.error("Daromadlarni yuklashda xato: " + incomesRes.error.message)
+    if (expensesRes.error) toast.error("Xarajatlarni yuklashda xato: " + expensesRes.error.message)
+    if (investmentsRes.error) toast.error("Kiritmalarni yuklashda xato: " + investmentsRes.error.message)
+
     const incomes: Income[] = (incomesRes.data || []).map((inc: any) => ({
       id: inc.id,
       name: inc.name,
@@ -80,7 +87,9 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
       name: exp.name,
       amount: exp.amount,
       category: exp.category,
+      subcategory: exp.subcategory || undefined,
       date: exp.date || new Date().toISOString(),
+      isRecurring: exp.is_recurring || false,
       created_at: exp.created_at || undefined,
     }))
 
@@ -101,7 +110,10 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
   addIncome: async (income) => {
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
+    if (!user) {
+      toast.error("Foydalanuvchi topilmadi")
+      return
+    }
 
     const { data: rawData, error } = await supabase.from('income_sources').insert({
       user_id: user.id,
@@ -123,6 +135,11 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
         created_at: data.created_at || undefined,
       }
       set((state) => ({ incomes: [newIncome, ...state.incomes] }))
+      toast.success("Daromad qo'shildi")
+    } else {
+      console.error(error)
+      toast.error("Daromad qo'shishda xato: " + error?.message)
+      throw error
     }
   },
 
@@ -136,7 +153,9 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
       name: expense.name,
       amount: expense.amount,
       category: expense.category,
+      subcategory: expense.subcategory,
       date: expense.date,
+      is_recurring: expense.isRecurring || false,
     } as any).select().single()
 
     const data = rawData as any;
@@ -147,10 +166,17 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
         name: data.name,
         amount: data.amount,
         category: data.category,
+        subcategory: data.subcategory || undefined,
         date: data.date || new Date().toISOString(),
+        isRecurring: data.is_recurring || false,
         created_at: data.created_at || undefined,
       }
       set((state) => ({ expenses: [newExpense, ...state.expenses] }))
+      toast.success("Xarajat qo'shildi")
+    } else {
+      console.error(error)
+      toast.error("Xarajat qo'shishda xato: " + error?.message)
+      throw error
     }
   },
 
@@ -159,6 +185,9 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
     const { error } = await supabase.from('income_sources').delete().eq('id', id)
     if (!error) {
       set((state) => ({ incomes: state.incomes.filter(inc => inc.id !== id) }))
+      toast.success("Daromad o'chirildi")
+    } else {
+      toast.error("Xato: " + error.message)
     }
   },
 
@@ -167,6 +196,9 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
     const { error } = await supabase.from('expenses').delete().eq('id', id)
     if (!error) {
       set((state) => ({ expenses: state.expenses.filter(exp => exp.id !== id) }))
+      toast.success("Xarajat o'chirildi")
+    } else {
+      toast.error("Xato: " + error.message)
     }
   },
 
@@ -197,6 +229,11 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
         created_at: data.created_at || undefined,
       }
       set((state) => ({ investments: [newInv, ...state.investments] }))
+      toast.success("Kiritma qo'shildi")
+    } else {
+      console.error(error)
+      toast.error("Kiritma qo'shishda xato: " + error?.message)
+      throw error
     }
   },
 
@@ -205,6 +242,9 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
     const { error } = await supabase.from('investments').delete().eq('id', id)
     if (!error) {
       set((state) => ({ investments: state.investments.filter(inv => inv.id !== id) }))
+      toast.success("Kiritma o'chirildi")
+    } else {
+      toast.error("Xato: " + error.message)
     }
   }
 }))

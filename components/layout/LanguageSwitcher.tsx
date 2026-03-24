@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Check, Globe } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,11 +32,9 @@ export function LanguageSwitcher() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="w-9 px-0">
-          <Globe className="h-4 w-4" />
-          <span className="sr-only">Toggle language</span>
-        </Button>
+      <DropdownMenuTrigger className={cn(buttonVariants({ variant: 'ghost', size: 'icon' }), "w-9 px-0")}>
+        <Globe className="h-4 w-4" />
+        <span className="sr-only">Toggle language</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onSelect={() => setLanguage('uz')} className="cursor-pointer font-medium">

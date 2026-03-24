@@ -4,7 +4,8 @@ import { useFinanceStore } from '@/lib/store/useFinanceStore'
 import { formatCurrency, formatDate } from '@/lib/utils/formatters'
 import { Card, CardContent } from '@/components/ui/card'
 import { Coffee, ShoppingCart, Home, Car, Zap, MoreHorizontal, FileText } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -59,7 +60,7 @@ export function ExpenseList() {
       </div>
       <CardContent className="p-0">
         <div className="rounded-md overflow-x-auto w-full max-w-[calc(100vw-2rem)] sm:max-w-full">
-          <table className="w-full min-w-[700px] text-sm text-left">
+          <table className="w-full text-sm text-left">
             <thead className="text-xs text-muted-foreground uppercase bg-neutral-50/50 dark:bg-neutral-900/50 border-b">
               <tr>
                 <th className="px-6 py-4 font-medium whitespace-nowrap">{t.expenses.expenseDesc}</th>
@@ -108,11 +109,9 @@ export function ExpenseList() {
                   </td>
                   <td className="px-6 py-4 text-right whitespace-nowrap">
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <span className="sr-only">Open menu</span>
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
+                      <DropdownMenuTrigger className={cn(buttonVariants({ variant: 'ghost' }), "h-8 w-8 p-0")}>
+                        <span className="sr-only">Open menu</span>
+                        <MoreHorizontal className="h-4 w-4" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-[160px]">
                         <DropdownMenuItem>{t.expenses.editDetails}</DropdownMenuItem>

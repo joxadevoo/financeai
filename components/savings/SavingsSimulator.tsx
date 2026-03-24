@@ -174,7 +174,7 @@ export function SavingsSimulator() {
           <CardContent>
             <div className="h-[350px] w-full mt-4">
               <ClientOnly>
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" minHeight={1} minWidth={1}>
                   <AreaChart
                     data={projectionData}
                     margin={{ top: 10, right: 30, left: 20, bottom: 0 }}

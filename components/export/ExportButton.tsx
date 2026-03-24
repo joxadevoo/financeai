@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import { Download, FileText, FileSpreadsheet } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -52,11 +53,12 @@ export function ExportButton({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant={variant} size={size} disabled={isExporting || data.length === 0} className="gap-2">
-          <Download className="h-4 w-4" />
-          <span className="hidden sm:inline-block">Export Logs</span>
-        </Button>
+      <DropdownMenuTrigger 
+        className={cn(buttonVariants({ variant: variant, size: size }), "gap-2", {"opacity-50 pointer-events-none": isExporting || data.length === 0})}
+        disabled={isExporting || data.length === 0}
+      >
+        <Download className="h-4 w-4" />
+        <span className="hidden sm:inline-block">Export Logs</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={handleExportExcel} className="cursor-pointer">

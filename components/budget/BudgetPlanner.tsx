@@ -13,7 +13,7 @@ import { useTranslation } from '@/lib/i18n/useTranslation'
 import { ClientOnly } from '@/components/ui/client-only'
 
 export function BudgetPlanner() {
-  const { incomes, expenses } = useFinanceStore()
+  const { incomes, expenses, investments } = useFinanceStore()
   const { t } = useTranslation()
   
   const totalIncome = calculateTotalIncome(incomes)
@@ -43,10 +43,16 @@ export function BudgetPlanner() {
     { name: t.budget.savings, value: budgetSavings, color: '#10b981' },
   ]
 
-  // Mock expense categorization
-  const spentNeeds = currentExpenses * 0.6
-  const spentWants = currentExpenses * 0.3
-  const spentSavings = currentExpenses * 0.1
+  // Actual expense categorization from Supabase
+  const spentNeeds = expenses
+    .filter(e => ['Housing', 'Food', 'Transport', 'Utilities', 'Healthcare'].includes(e.category))
+    .reduce((sum, e) => sum + Number(e.amount), 0)
+
+  const spentWants = expenses
+    .filter(e => ['Dining', 'Entertainment', 'other', 'Other'].includes(e.category))
+    .reduce((sum, e) => sum + Number(e.amount), 0)
+
+  const spentSavings = investments.reduce((sum, inv) => sum + Number(inv.initialAmount), 0)
 
   const renderProgressBar = (spent: number, budget: number, colorClass: string) => {
     const percent = Math.min(100, (spent / budget) * 100)
@@ -157,7 +163,7 @@ export function BudgetPlanner() {
         </CardHeader>
         <CardContent className="flex-1 flex flex-col items-center justify-center">
           <div className="h-[250px] w-full mt-4">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minHeight={1} minWidth={1}>
               <PieChart>
                 <Pie
                   data={chartData}

@@ -13,7 +13,9 @@ import {
   Settings, 
   TrendingUp,
   BrainCircuit,
-  Download
+  Download,
+  Target,
+  Repeat
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useTranslation } from '@/lib/i18n/useTranslation'
@@ -25,9 +27,11 @@ const getNavItems = (t: any) => [
   { name: t.common.income, href: '/income', icon: PlusCircle },
   { name: t.common.expenses, href: '/expenses', icon: CreditCard },
   { name: t.common.budgetPlanner, href: '/budget', icon: PieChart },
+  { name: t.common.subscriptions, href: '/subscriptions', icon: Repeat },
   { name: t.common.savingsSimulator, href: '/savings', icon: PiggyBank },
   { name: t.common.emergencyFund, href: '/emergency', icon: BarChart3 },
   { name: t.common.investments, href: '/investment', icon: LineChart },
+  { name: t.common.goals, href: '/goals', icon: Target },
   { name: t.common.aiAdvisor, href: '/ai-advisor', icon: BrainCircuit, highlight: true },
 ]
 
