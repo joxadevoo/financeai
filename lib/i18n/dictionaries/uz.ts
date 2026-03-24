@@ -32,6 +32,7 @@ export const uz: Dictionary = {
     exportToExcel: 'Excel formatda hisobot (.xlsx)',
     exportToPdf: 'PDF formatda hisobot (.pdf)',
     installApp: 'Ilovani O\'rnatish',
+    notifications: 'Bildirishnomalar',
   },
   overview: {
     title: 'Bosh sahifa',

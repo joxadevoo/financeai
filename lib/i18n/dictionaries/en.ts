@@ -30,6 +30,7 @@ export const en = {
     exportToExcel: 'Export to Excel (.xlsx)',
     exportToPdf: 'Export to PDF (.pdf)',
     installApp: 'Install App',
+    notifications: 'Notifications',
   },
   overview: {
     title: 'Dashboard overview',

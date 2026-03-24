@@ -6,6 +6,7 @@ import { useTheme } from 'next-themes'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import { useCurrencyStore } from '@/lib/store/useCurrencyStore'
+import { useFamilyStore } from '@/lib/store/useFamilyStore'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,12 +30,14 @@ export function Topbar({ onMenuClick }: TopbarProps) {
   const { setTheme, theme } = useTheme()
   const { t } = useTranslation()
   const { currency, setCurrency, fetchRate } = useCurrencyStore()
+  const { links, fetchLinks, acceptInvite, removeLink } = useFamilyStore()
   const supabase = createClient()
   const router = useRouter()
   const [userEmail, setUserEmail] = useState<string | null>(null)
 
   useEffect(() => {
     fetchRate() // fetch live rate on load
+    fetchLinks() // fetch family links for notifications
     const getUserData = async () => {
       const { data } = await supabase.auth.getUser()
       if (data.user) {
@@ -48,6 +51,12 @@ export function Topbar({ onMenuClick }: TopbarProps) {
     await supabase.auth.signOut()
     router.push('/login')
   }
+
+  const pendingInvitesList = links.filter(l => 
+    l.member_email.trim().toLowerCase() === userEmail?.trim().toLowerCase() && 
+    l.status === 'pending'
+  )
+  const pendingInvites = pendingInvitesList.length
 
   return (
     <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between gap-x-4 border-b bg-background/80 backdrop-blur-md px-2 sm:px-4 shadow-sm lg:px-8">
@@ -73,15 +82,66 @@ export function Topbar({ onMenuClick }: TopbarProps) {
         </div>
       </div>
       
-      <div className="flex items-center gap-x-2 sm:gap-x-4 lg:gap-x-6">
+      <div className="flex items-center gap-x-1 sm:gap-x-4 lg:gap-x-6">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative text-neutral-600 dark:text-neutral-400"
+            >
+              <Bell className="h-5 w-5" />
+              {pendingInvites > 0 && (
+                <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border-2 border-background"></span>
+                </span>
+              )}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-80 p-2">
+            <DropdownMenuLabel className="font-semibold text-base">{t.common?.notifications || 'Bildirishnomalar'}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {pendingInvitesList.length > 0 ? (
+              <div className="max-h-[300px] overflow-y-auto">
+                {pendingInvitesList.map(invite => (
+                  <div key={invite.id} className="p-3 bg-neutral-50 dark:bg-neutral-900 rounded-lg mb-2 border">
+                    <p className="text-sm mb-3">Sizni oilaviy guruhga vizual ulanishga taklif qilishdi!</p>
+                    <div className="flex gap-2">
+                      <Button size="sm" className="w-full bg-emerald-600 hover:bg-emerald-700" onClick={() => acceptInvite(invite.id)}>
+                        Qabul
+                      </Button>
+                      <Button size="sm" variant="outline" className="w-full text-red-600" onClick={() => removeLink(invite.id)}>
+                        Rad
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="py-6 text-center text-sm text-neutral-500">
+                Sizda yangi xabarlar yo'q
+              </div>
+            )}
+            {pendingInvitesList.length > 0 && (
+              <>
+                <DropdownMenuSeparator />
+                <Button variant="ghost" className="w-full text-xs" onClick={() => router.push('/family')}>
+                  Barcha takliflarni ko'rish
+                </Button>
+              </>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         <Button
           variant="ghost"
           size="sm"
           onClick={() => setCurrency(currency === 'UZS' ? 'USD' : 'UZS')}
-          className="text-neutral-600 dark:text-neutral-400 font-medium hidden sm:flex"
+          className="text-neutral-600 dark:text-neutral-400 font-medium flex px-2"
         >
-          {currency === 'UZS' ? <Coins className="h-4 w-4 mr-1" /> : <DollarSign className="h-4 w-4 mr-1" />}
-          {currency}
+          {currency === 'UZS' ? <Coins className="h-4 w-4 sm:mr-1" /> : <DollarSign className="h-4 w-4 sm:mr-1" />}
+          <span className="hidden sm:inline-block">{currency}</span>
         </Button>
 
         <LanguageSwitcher />

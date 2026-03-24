@@ -8,6 +8,7 @@ export interface FamilyLink {
   head_user_id: string
   member_user_id: string | null
   member_email: string
+  member_tag?: string | null
   status: 'pending' | 'accepted'
   created_at: string
 }
@@ -19,6 +20,7 @@ interface FamilyState {
   inviteMember: (email: string) => Promise<void>
   acceptInvite: (id: string) => Promise<void>
   removeLink: (id: string) => Promise<void>
+  updateMemberTag: (id: string, tag: string) => Promise<void>
 }
 
 export const useFamilyStore = create<FamilyState>((set, get) => ({
@@ -110,6 +112,20 @@ export const useFamilyStore = create<FamilyState>((set, get) => ({
       toast.success("O'chirildi")
       set((state) => ({ links: state.links.filter(l => l.id !== id) }))
       useFinanceStore.getState().fetchData() // Refresh
+    }
+  },
+
+  updateMemberTag: async (id: string, tag: string) => {
+    const supabase = createClient()
+    // @ts-ignore
+    const { error } = await supabase.from('family_links').update({ member_tag: tag } as any).eq('id', id)
+    if (error) {
+      toast.error("Nomni o'zgartirishda xato")
+    } else {
+      toast.success("Rol belgilandi!")
+      set((state) => ({
+        links: state.links.map(l => l.id === id ? { ...l, member_tag: tag } : l)
+      }))
     }
   }
 }))

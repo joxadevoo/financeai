@@ -15,15 +15,26 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ExportButton } from '@/components/export/ExportButton'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import { useFamilyStore } from '@/lib/store/useFamilyStore'
 
 export function IncomeList() {
   const { incomes } = useFinanceStore()
+  const { links } = useFamilyStore()
   const { t } = useTranslation()
   
   // Removed mock data
 
   const exportColumns = [t.income.source, t.income.type, t.income.frequency, t.income.amount, t.common.date]
   const mapDataForPdf = (item: any) => [item.name, item.type, item.frequency, item.amount.toString(), formatDate(item.date || new Date().toISOString())]
+
+  const getIncomeTag = (userId?: string) => {
+    if (!userId) return null
+    const link = links.find(l => l.member_user_id === userId)
+    if (link && link.member_tag) return link.member_tag
+    const headLink = links.find(l => l.head_user_id === userId)
+    if (headLink) return "Oila boshlig'i" // Fallback if the purchaser is the head user
+    return null
+  }
 
   return (
     <Card className="shadow-sm border-neutral-200 dark:border-neutral-800 w-full overflow-hidden">
@@ -36,8 +47,8 @@ export function IncomeList() {
           pdfDataMapper={mapDataForPdf}
         />
       </div>
-      <CardContent className="p-0">
-        <div className="rounded-md overflow-x-auto w-full max-w-[calc(100vw-2rem)] sm:max-w-full">
+      <CardContent className="p-0 overflow-hidden">
+        <div className="rounded-md overflow-x-auto w-full scrollbar-thin scrollbar-thumb-neutral-200 dark:scrollbar-thumb-neutral-800 pb-2">
           <table className="w-full text-sm text-left">
             <thead className="text-xs text-muted-foreground uppercase bg-neutral-50/50 dark:bg-neutral-900/50 border-b">
               <tr>
@@ -69,7 +80,16 @@ export function IncomeList() {
                       <div className={`p-2 rounded-lg ${income.type === 'Passive' ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400' : 'bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'}`}>
                         <Briefcase className="h-4 w-4" />
                       </div>
-                      <div className="font-medium text-foreground">{income.name}</div>
+                      <div className="flex flex-col">
+                        <div className="font-medium text-foreground flex items-center gap-2">
+                          {income.name}
+                          {getIncomeTag(income.user_id) && (
+                            <span className="inline-flex items-center rounded-full border px-1.5 py-0 flex-shrink-0 text-[10px] font-semibold bg-indigo-100 text-indigo-700 border-indigo-200 dark:bg-indigo-900/50 dark:text-indigo-300 dark:border-indigo-800 h-5">
+                              {getIncomeTag(income.user_id)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">

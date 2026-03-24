@@ -4,6 +4,7 @@ import { toast } from 'sonner'
 
 export interface Income {
   id: string
+  user_id?: string
   name: string
   amount: number
   type: string
@@ -13,6 +14,7 @@ export interface Income {
 
 export interface Expense {
   id: string
+  user_id?: string
   name: string
   amount: number
   category: string
@@ -24,6 +26,7 @@ export interface Expense {
 
 export interface Investment {
   id: string
+  user_id?: string
   name: string
   type: string
   initialAmount: number
@@ -75,6 +78,7 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
 
     const incomes: Income[] = (incomesRes.data || []).map((inc: any) => ({
       id: inc.id,
+      user_id: inc.user_id,
       name: inc.name,
       amount: inc.amount,
       type: inc.type || 'Active',
@@ -84,6 +88,7 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
 
     const expenses: Expense[] = (expensesRes.data || []).map((exp: any) => ({
       id: exp.id,
+      user_id: exp.user_id,
       name: exp.name,
       amount: exp.amount,
       category: exp.category,
@@ -95,6 +100,7 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
 
     const investments: Investment[] = (investmentsRes.data || []).map((inv: any) => ({
       id: inv.id,
+      user_id: inv.user_id,
       name: inv.name,
       type: inv.type,
       initialAmount: inv.initial_amount || 0,
@@ -128,6 +134,7 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
     if (!error && data) {
       const newIncome: Income = {
         id: data.id,
+        user_id: data.user_id || user.id,
         name: data.name,
         amount: data.amount,
         type: data.type || 'Active',
@@ -163,6 +170,7 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
     if (!error && data) {
       const newExpense: Expense = {
         id: data.id,
+        user_id: data.user_id || user.id,
         name: data.name,
         amount: data.amount,
         category: data.category,
@@ -220,6 +228,7 @@ export const useFinanceStore = create<FinanceState>((set, get) => ({
     if (!error && data) {
       const newInv: Investment = {
         id: data.id,
+        user_id: data.user_id || user.id,
         name: data.name,
         type: data.type,
         initialAmount: data.initial_amount || 0,

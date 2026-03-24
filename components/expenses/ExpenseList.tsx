@@ -15,9 +15,11 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ExportButton } from '@/components/export/ExportButton'
 import { useTranslation } from '@/lib/i18n/useTranslation'
+import { useFamilyStore } from '@/lib/store/useFamilyStore'
 
 export function ExpenseList() {
   const { expenses } = useFinanceStore()
+  const { links } = useFamilyStore()
   const { t } = useTranslation()
   
   // Removed mock data
@@ -43,8 +45,18 @@ export function ExpenseList() {
       case 'Utilities': return 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/50 dark:text-yellow-400'
       case 'Transport': return 'bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'
       case 'Dining': return 'bg-orange-100 text-orange-600 dark:bg-orange-900/50 dark:text-orange-400'
+      case 'Dining': return 'bg-orange-100 text-orange-600 dark:bg-orange-900/50 dark:text-orange-400'
       default: return 'bg-neutral-100 text-neutral-600 dark:bg-neutral-900/50 dark:text-neutral-400'
     }
+  }
+
+  const getExpenseTag = (userId?: string) => {
+    if (!userId) return null
+    const link = links.find(l => l.member_user_id === userId)
+    if (link && link.member_tag) return link.member_tag
+    const headLink = links.find(l => l.head_user_id === userId)
+    if (headLink) return "Oila boshlig'i" // Fallback if the purchaser is the head user
+    return null
   }
 
   return (
@@ -58,9 +70,9 @@ export function ExpenseList() {
           pdfDataMapper={mapDataForPdf}
         />
       </div>
-      <CardContent className="p-0">
-        <div className="overflow-x-auto w-full">
-          <table className="w-full text-sm text-left min-w-[600px]">
+      <CardContent className="p-0 overflow-hidden">
+        <div className="overflow-x-auto w-full scrollbar-thin scrollbar-thumb-neutral-200 dark:scrollbar-thumb-neutral-800 pb-2">
+          <table className="w-full text-sm text-left min-w-[700px]">
             <thead className="text-xs text-muted-foreground uppercase bg-neutral-50/50 dark:bg-neutral-900/50 border-b">
               <tr>
                 <th className="px-6 py-4 font-medium whitespace-nowrap">{t.expenses.expenseDesc}</th>
@@ -86,7 +98,16 @@ export function ExpenseList() {
                       <div className={`p-2 rounded-lg ${getCategoryColor(expense.category)}`}>
                         {getCategoryIcon(expense.category)}
                       </div>
-                      <div className="font-medium text-foreground">{expense.name}</div>
+                      <div className="flex flex-col">
+                        <div className="font-medium text-foreground flex items-center gap-2">
+                          {expense.name}
+                          {getExpenseTag(expense.user_id) && (
+                            <span className="inline-flex items-center rounded-full border px-1.5 py-0 flex-shrink-0 text-[10px] font-semibold bg-indigo-100 text-indigo-700 border-indigo-200 dark:bg-indigo-900/50 dark:text-indigo-300 dark:border-indigo-800 h-5">
+                              {getExpenseTag(expense.user_id)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">

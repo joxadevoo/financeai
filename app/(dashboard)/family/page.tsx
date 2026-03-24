@@ -3,19 +3,23 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Users, Mail, Sparkles, Heart, CheckCircle2, XCircle, Clock } from 'lucide-react'
+import { Users, Mail, Sparkles, Heart, CheckCircle2, XCircle, Clock, Tag } from 'lucide-react'
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { useFamilyStore } from '@/lib/store/useFamilyStore'
 import { createClient } from '@/lib/supabase/client'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { FamilyStats } from '@/components/family/FamilyStats'
 
 export default function FamilyPage() {
   const { language } = useTranslation()
-  const { links, isLoading, fetchLinks, inviteMember, acceptInvite, removeLink } = useFamilyStore()
+  const { links, isLoading, fetchLinks, inviteMember, acceptInvite, removeLink, updateMemberTag } = useFamilyStore()
   const [email, setEmail] = useState('')
   const [adding, setAdding] = useState(false)
   const [myEmail, setMyEmail] = useState<string | null>(null)
+
+  const tags = ['Otam', 'Onam', 'Turmush o\'rtog\'im', 'Akam', 'Ukam', 'Opam', 'Singlim', 'Farzandim']
 
   useEffect(() => {
     fetchLinks()
@@ -61,8 +65,9 @@ export default function FamilyPage() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-8 mt-10">
-        <Card className="border-rose-100 dark:border-rose-900/50 shadow-md">
-          <CardHeader>
+        <div className="space-y-6">
+          <Card className="border-rose-100 dark:border-rose-900/50 shadow-md">
+            <CardHeader>
             <CardTitle className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
               <Sparkles className="h-5 w-5" />
               Premium Feature
@@ -100,7 +105,10 @@ export default function FamilyPage() {
           </CardContent>
         </Card>
 
-        <div className="space-y-6">
+        <FamilyStats />
+      </div>
+
+      <div className="space-y-6">
           {pendingReceived.length > 0 && (
             <Card className="border-amber-200 dark:border-amber-900/50 shadow-sm bg-amber-50/50 dark:bg-amber-900/10">
               <CardHeader className="pb-3">
@@ -154,15 +162,33 @@ export default function FamilyPage() {
                       {link.member_email.charAt(0)}
                     </div>
                     <div>
-                      <p className="text-sm font-medium">{link.member_email}</p>
+                      <p className="text-sm font-medium">{link.member_tag ? <span className="text-indigo-600 dark:text-indigo-400 mr-2 font-bold">{link.member_tag}</span> : null}{link.member_email}</p>
                       <p className="text-xs text-emerald-500 flex items-center gap-1">
                         <CheckCircle2 className="w-3 h-3" /> faol
                       </p>
                     </div>
                   </div>
-                  <Button variant="ghost" size="icon" onClick={() => removeLink(link.id)} className="text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30">
-                    <XCircle className="w-4 h-4" />
-                  </Button>
+                  <div className="flex gap-1">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="text-neutral-400 hover:text-indigo-600">
+                          <Tag className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuLabel>Rol berish (Tag)</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        {tags.map(tag => (
+                          <DropdownMenuItem key={tag} onClick={() => updateMemberTag(link.id, tag)}>
+                            {tag}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <Button variant="ghost" size="icon" onClick={() => removeLink(link.id)} className="text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30">
+                      <XCircle className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
               ))}
 

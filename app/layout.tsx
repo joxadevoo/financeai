@@ -22,7 +22,6 @@ export const metadata: Metadata = {
     ],
     shortcut: ['/icons/icon-192x192.png'],
   },
-  themeColor: '#ffffff',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -33,14 +32,24 @@ export const metadata: Metadata = {
   }
 };
 
+import { Viewport } from "next";
+
+export const viewport: Viewport = {
+  themeColor: '#ffffff',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={outfit.className}>
+    <html lang="en" suppressHydrationWarning className="h-full w-full">
+      <body className={`${outfit.className} h-full w-full`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
